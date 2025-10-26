@@ -1,6 +1,6 @@
 .app-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f8d7e3 50%, #e3bdf2 100%);
   position: relative;
   overflow: hidden;
 }
@@ -10,7 +10,7 @@
   position: absolute;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 105, 180, 0.15) 0%, transparent 70%);
   top: -250px;
   right: -250px;
   animation: float 8s ease-in-out infinite;
@@ -21,7 +21,7 @@
   position: absolute;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(118, 75, 162, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.15) 0%, transparent 70%);
   bottom: -200px;
   left: -200px;
   animation: float 10s ease-in-out infinite reverse;
