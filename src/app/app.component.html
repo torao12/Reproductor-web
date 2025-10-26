@@ -1,0 +1,11 @@
+<div class="app-container">
+  <app-navbar (searchQuery)="onSearch($event)"></app-navbar>
+  
+  <div class="main-content">
+    <app-player-main></app-player-main>
+  </div>
+  
+  <app-playlist-sidebar></app-playlist-sidebar>
+  <app-player-controls></app-player-controls>
+  <button (click)="loginWithSpotify()">Conectar con Spotify</button>
+</div>
