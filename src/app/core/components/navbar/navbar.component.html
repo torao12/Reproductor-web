@@ -1,0 +1,24 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <h1>Music Player</h1>
+    </div>
+    
+    <div class="navbar-search">
+      <input 
+        type="text" 
+        placeholder="Buscar canciones, artistas..." 
+        [value]="searchTerm"
+        (input)="searchTerm = $event.target.value; onSearchInput($event)"
+        (keyup.enter)="onSearch()"
+        class="search-input"
+      />
+      <button (click)="onSearch()" class="search-button">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>

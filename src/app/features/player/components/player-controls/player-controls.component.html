@@ -1,0 +1,66 @@
+<div class="player-controls" *ngIf="track">
+  <div class="controls-container">
+    <div class="track-info-mini">
+      <div class="track-thumbnail-mini">
+        <img [src]="track.album.images[0]?.url" [alt]="track.name">
+      </div>
+      <div class="track-text">
+        <p>{{ track.artists[0]?.name }}</p>
+        <p class="track-artist">{{ track.artists[0]?.name }}</p>
+      </div>
+    </div>
+
+    <div class="controls-center">
+      <div class="control-buttons">
+        <button class="control-btn-mini" (click)="previous()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+          </svg>
+        </button>
+
+        <button class="control-btn-mini play-pause-mini" (click)="togglePlayPause()">
+          <svg *ngIf="!isPlaying" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg *ngIf="isPlaying" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+          </svg>
+        </button>
+
+        <button class="control-btn-mini" (click)="next()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="progress-section">
+        <span class="time-label">{{ formatTime(currentTime) }}</span>
+        <div class="progress-bar-container">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" [style.width.%]="progress"></div>
+          </div>
+          <input 
+            type="range" 
+            class="progress-slider"
+            [min]="0"
+            [max]="duration"
+            [value]="currentTime"
+            (input)="onSeek($event)"
+            step="0.1"
+          />
+        </div>
+        <span class="time-label">{{ formatTime(duration) }}</span>
+      </div>
+    </div>
+
+    <div class="volume-section">
+      <button class="control-btn-mini">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

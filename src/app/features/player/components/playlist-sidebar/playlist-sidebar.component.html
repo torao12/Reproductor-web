@@ -1,0 +1,32 @@
+<div class="playlist-sidebar">
+  <div class="playlist-header">
+    <button class="add-btn">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+    <h2>MY SONGS</h2>
+  </div>
+
+  <div class="playlist-content">
+    <div 
+      *ngFor="let track of playlist$ | async; let i = index"
+      class="track-item"
+      [class.active]="isCurrentTrack(track, currentTrack$ | async)"
+      (click)="playTrack(track, i)">
+      <div class="track-thumbnail">
+        <img [src]="track.album.images[0]?.url" [alt]="track.name">
+        <div class="play-overlay">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="track-details">
+        <h3 class="track-title">{{ track.name }}</h3>
+        <p class="track-artist">{{ track.artists[0]?.name }}</p>
+      </div>
+    </div>
+  </div>
+</div>

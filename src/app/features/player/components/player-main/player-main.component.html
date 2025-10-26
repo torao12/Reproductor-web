@@ -1,0 +1,60 @@
+<div class="player-container">
+  <div class="player-main">
+    
+    <!-- Sidebar con lista de canciones -->
+    <app-playlist-sidebar (trackSelected)="onTrackSelected($event)"></app-playlist-sidebar>
+
+    <!-- Visualización del track actual -->
+    <div class="current-track-display" *ngIf="currentTrack">
+      <div class="album-circle">
+        <img [src]="currentTrack.album.images[0]?.url" [alt]="currentTrack.name" />
+      </div>
+
+      <div class="track-details">
+        <h2 class="track-name">{{ currentTrack.name }}</h2>
+        <p class="artist-name">{{ currentTrack.artists[0]?.name }}</p>
+      </div>
+    </div>
+
+    <!-- Controles de reproducción -->
+    <div class="controls">
+      <button class="control-btn previous" (click)="previous()" [disabled]="!currentTrack">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+        </svg>
+      </button>
+
+      <button class="control-btn play-pause" (click)="togglePlayPause()" [disabled]="!currentTrack">
+        <svg *ngIf="!isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <svg *ngIf="isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+        </svg>
+      </button>
+
+      <button class="control-btn next" (click)="next()" [disabled]="!currentTrack">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-container" *ngIf="currentTrack">
+      <input 
+        type="range" 
+        min="0" 
+        [max]="duration" 
+        [value]="currentTime" 
+        (input)="onSeek($event)" 
+        step="0.1"
+      />
+      <div class="time-info">
+        <span>{{ formatTime(currentTime) }}</span>
+        <span>{{ formatTime(duration) }}</span>
+      </div>
+    </div>
+
+  </div>
+</div>

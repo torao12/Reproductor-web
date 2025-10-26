@@ -1,0 +1,47 @@
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-container::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%);
+  top: -250px;
+  right: -250px;
+  animation: float 8s ease-in-out infinite;
+}
+
+.app-container::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(118, 75, 162, 0.15) 0%, transparent 70%);
+  bottom: -200px;
+  left: -200px;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, 30px); }
+}
+
+.main-content {
+  margin-top: 80px;
+  margin-right: 380px;
+  margin-bottom: 100px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    margin-right: 0;
+  }
+}
