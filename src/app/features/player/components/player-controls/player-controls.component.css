@@ -3,33 +3,39 @@
   bottom: 0;
   left: 0;
   right: 380px;
-  background: linear-gradient(180deg, rgba(15, 23, 38, 0.95) 0%, rgba(10, 15, 25, 0.98) 100%);
-  backdrop-filter: blur(20px);
+  background: rgba(28, 28, 28, 0.98);
+  backdrop-filter: blur(30px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem 2rem;
+  padding: 0;
   z-index: 90;
+  height: 90px;
+  display: flex;
+  justify-content: center;
 }
 
 .controls-container {
-  max-width: 1400px;
+  max-width: 720px;
+  width: 100%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 24px;
+  padding: 0 16px;
+  position: relative;
 }
 
 /* Track Info Mini */
 .track-info-mini {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
+  width: 200px;
 }
 
 .track-thumbnail-mini {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -42,20 +48,22 @@
 
 .track-text {
   min-width: 0;
+  flex: 1;
 }
 
 .track-name-mini {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: #fff;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 4px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 }
 
 .artist-name-mini {
-  font-size: 0.8rem;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
   margin: 0;
   white-space: nowrap;
@@ -63,18 +71,61 @@
   text-overflow: ellipsis;
 }
 
+/* Progress Bar */
+.progress-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  background: #fa586a;
+  position: relative;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: -3px;
+  width: 8px;
+  height: 8px;
+  background: #fa586a;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress-container:hover .progress-bar::after {
+  opacity: 1;
+}
+
+/* Volume Controls */
+.volume-controls {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 /* Controls Center */
 .controls-center {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 8px;
+  flex: 1;
 }
 
 .control-buttons {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 24px;
 }
 
 .control-btn-mini {
@@ -82,22 +133,35 @@
   border: none;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  padding: 8px;
   border-radius: 50%;
+  width: 32px;
+  height: 32px;
 }
 
 .control-btn-mini:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
 }
 
 .play-pause-mini {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.play-pause-mini:hover {
+  transform: scale(1.05);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }

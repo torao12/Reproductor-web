@@ -1,6 +1,13 @@
+// Componente principal del reproductor
+// - Orquesta la UI principal: barra de búsqueda, vista del reproductor y sidebar
+// - Suscribe a streams del PlayerService para mantener sincronía (pista actual,
+//   tiempo, estado de reproducción, playlist, shuffle/repeat)
+// - Maneja la búsqueda (delegando a SpotifyService) y la navegación entre
+//   vista de búsqueda y vista del reproductor
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PlaylistSidebarComponent } from '../playlist-sidebar/playlist-sidebar.component';
 import { PlayerService } from '../../services/player.service';
 import { SpotifyService } from '../../../../core/services/spotify.service';
@@ -10,7 +17,7 @@ import { SpotifySearchResponse } from '../../../../core/models/spotify-search-re
 @Component({
   selector: 'app-player-main',
   standalone: true,
-  imports: [CommonModule,PlaylistSidebarComponent],
+  imports: [CommonModule, FormsModule, PlaylistSidebarComponent],
   templateUrl: './player-main.component.html',
   styleUrls: ['./player-main.component.css']
 })
@@ -23,6 +30,17 @@ export class PlayerMainComponent implements OnInit, OnDestroy {
   isRepeat = false;
   isLiked = false;
   tracks: Track[] = [];
+  searchQuery = '';
+  isSearching = false;
+  searchResults: {
+    tracks: Track[];
+    artists: any[];
+    albums: any[];
+  } = {
+    tracks: [],
+    artists: [],
+    albums: []
+  };
 
   private destroy$ = new Subject<void>();
 
@@ -31,7 +49,19 @@ export class PlayerMainComponent implements OnInit, OnDestroy {
     private spotifyService: SpotifyService
   ) {}
 
+  // onTrackSelect: manejador usado por la vista de búsqueda y el sidebar
+  // cuando el usuario selecciona una pista.
+  // - Reproduce la pista usando PlayerService
+  // - Cambia la UI para volver a la vista principal del reproductor
+
+  onTrackSelect(track: Track): void {
+    this.playerService.playTrack(track);
+    this.isSearching = false; // Regresa a la vista del reproductor
+  }
+
   ngOnInit(): void {
+    // Suscribirse a la pista actual: cada vez que cambia se actualizan
+    // propiedades locales (currentTrack, duration, currentTime)
     this.playerService.currentTrack$
       .pipe(takeUntil(this.destroy$))
       .subscribe(track => {
@@ -71,8 +101,6 @@ export class PlayerMainComponent implements OnInit, OnDestroy {
       .subscribe((playlist: Track[]) => {
         this.tracks = playlist;
       });
-
-    this.loadInitialPlaylist();
   }
 
   ngOnDestroy(): void {
@@ -80,14 +108,24 @@ export class PlayerMainComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  loadInitialPlaylist(): void {
-    this.spotifyService.searchTracks('Olivia Rodrigo').subscribe((response: SpotifySearchResponse) => {
-      const tracks = response.tracks.items;
-      this.playerService.setPlaylist(tracks);
-      if (tracks.length > 0) {
-        this.playerService.playTrack(tracks[0]);
-      }
-    });
+  onSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.isSearching = true;
+      this.spotifyService.searchTracks(this.searchQuery).subscribe((response: SpotifySearchResponse) => {
+        this.searchResults.tracks = response.tracks.items;
+        // Aquí podrías agregar la lógica para buscar artistas y álbumes
+      });
+    }
+  }
+
+  backToPlayer(): void {
+    this.isSearching = false;
+    this.searchQuery = '';
+    this.searchResults = {
+      tracks: [],
+      artists: [],
+      albums: []
+    };
   }
 
   togglePlayPause(): void {
@@ -119,6 +157,10 @@ export class PlayerMainComponent implements OnInit, OnDestroy {
     const time = parseFloat(input.value);
     this.playerService.seek(time);
   }
+
+  /**
+   * formatTime: utilidad para mostrar segundos como mm:ss
+   */
 
   formatTime(seconds: number): string {
     const mins = Math.floor(seconds / 60);

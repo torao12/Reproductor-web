@@ -1,6 +1,6 @@
 .playlist-sidebar {
   width: 380px;
-  background: rgba(20, 30, 48, 0.6);
+  background: rgba(28, 28, 28, 0.98);
   backdrop-filter: blur(20px);
   border-left: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
@@ -9,42 +9,23 @@
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 90;
 }
 
 .playlist-header {
-  padding: 2rem 1.5rem 1rem;
+  padding: 64px 24px 16px;
   display: flex;
   align-items: center;
-  gap: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.add-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.add-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
-}
-
 .playlist-header h2 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .playlist-content {

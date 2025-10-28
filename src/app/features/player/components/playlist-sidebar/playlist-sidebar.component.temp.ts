@@ -1,9 +1,3 @@
-// Componente Sidebar de la lista de reproducción
-// Muestra la lista de canciones, indica la canción activa y emite eventos
-// cuando el usuario selecciona una pista.
-// - Expone un Output `trackSelected` para notificar al componente padre
-// - Consume `PlayerService` para leer/actualizar playlist y pista actual
-// - Usa `SpotifyService` solo aquí para cargar un set inicial de canciones
 import { Component, OnInit } from '@angular/core';
 import { PlayerService } from '../../services/player.service';
 import { Track } from '../../../../core/models/track.model';
@@ -21,14 +15,7 @@ import { SpotifySearchResponse } from '../../../../core/models/spotify-search-re
   styleUrls: ['./playlist-sidebar.component.css']
 })
 export class PlaylistSidebarComponent implements OnInit {
-  // Evento emitido cuando el usuario hace click en una pista del sidebar.
-  // El componente padre (PlayerMainComponent) lo captura para, por ejemplo,
-  // mostrar la vista del reproductor o actualizar estados locales.
   @Output() trackSelected = new EventEmitter<Track>();
-
-  // Observables expuestos por PlayerService:
-  // - playlist$: stream reactivo con la lista de pistas
-  // - currentTrack$: pista actualmente reproducida (o null)
   playlist$: Observable<Track[]>;
   currentTrack$: Observable<Track | null>;
 
@@ -41,21 +28,13 @@ export class PlaylistSidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Carga un set inicial de canciones para poblar la lista.
-    // En producción esto podría venir de una API, almacenamiento local o
-    // de la sesión del usuario. Aquí se usa una búsqueda fija para demo.
     this.loadPostMaloneSongs();
   }
 
   private loadPostMaloneSongs(): void {
-    // Ejecuta una búsqueda usando SpotifyService. Después asigna la
-    // playlist en PlayerService y, si no hay pista actual, inicia la
-    // reproducción con la primera pista.
     this.spotifyService.searchTracks('Post Malone').subscribe((response: SpotifySearchResponse) => {
       const tracks = response.tracks.items;
-      // Actualiza la playlist compartida
       this.playerService.setPlaylist(tracks);
-      // Si no hay pista activa, arrancar con la primera
       if (tracks.length > 0 && !this.playerService.getCurrentTrack()) {
         this.playerService.playTrack(tracks[0]);
       }
@@ -63,8 +42,6 @@ export class PlaylistSidebarComponent implements OnInit {
   }
 
   playTrack(track: Track, index: number): void {
-    // Reproducir la pista basada en índice y notificar al padre
-    // para que pueda, por ejemplo, cambiar la vista a la del reproductor.
     this.playerService.playTrackAtIndex(index);
     this.trackSelected.emit(track);
   }

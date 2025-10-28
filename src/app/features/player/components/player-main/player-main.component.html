@@ -1,60 +1,93 @@
 <div class="player-container">
+  <!-- Sidebar con lista de canciones -->
+  <app-playlist-sidebar (trackSelected)="onTrackSelected($event)"></app-playlist-sidebar>
+
   <div class="player-main">
-    
-    <!-- Sidebar con lista de canciones -->
-    <app-playlist-sidebar (trackSelected)="onTrackSelected($event)"></app-playlist-sidebar>
-
-    <!-- Visualización del track actual -->
-    <div class="current-track-display" *ngIf="currentTrack">
-      <div class="album-circle">
-        <img [src]="currentTrack.album.images[0]?.url" [alt]="currentTrack.name" />
-      </div>
-
-      <div class="track-details">
-        <h2 class="track-name">{{ currentTrack.name }}</h2>
-        <p class="artist-name">{{ currentTrack.artists[0]?.name }}</p>
-      </div>
-    </div>
-
-    <!-- Controles de reproducción -->
-    <div class="controls">
-      <button class="control-btn previous" (click)="previous()" [disabled]="!currentTrack">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-        </svg>
-      </button>
-
-      <button class="control-btn play-pause" (click)="togglePlayPause()" [disabled]="!currentTrack">
-        <svg *ngIf="!isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
-        <svg *ngIf="isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
-        </svg>
-      </button>
-
-      <button class="control-btn next" (click)="next()" [disabled]="!currentTrack">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Barra de progreso -->
-    <div class="progress-container" *ngIf="currentTrack">
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
       <input 
-        type="range" 
-        min="0" 
-        [max]="duration" 
-        [value]="currentTime" 
-        (input)="onSeek($event)" 
-        step="0.1"
-      />
-      <div class="time-info">
-        <span>{{ formatTime(currentTime) }}</span>
-        <span>{{ formatTime(duration) }}</span>
-      </div>
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (keyup.enter)="onSearch()"
+        placeholder="Buscar canciones, artistas o álbumes..."
+      >
+      <button *ngIf="isSearching" (click)="backToPlayer()" class="back-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+      </button>
     </div>
 
+    <!-- Vista de búsqueda -->
+    <div class="search-results" *ngIf="isSearching">
+      <!-- Resultados de canciones -->
+      <div class="results-section" *ngIf="searchResults.tracks.length > 0">
+        <h2>Canciones</h2>
+        <div class="track-grid">
+          <div *ngFor="let track of searchResults.tracks" class="track-card" (click)="onTrackSelect(track)">
+            <img [src]="track.album.images[0]?.url" [alt]="track.name">
+            <h3>{{ track.name }}</h3>
+            <p>{{ track.artists[0]?.name }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aquí irían las secciones de artistas y álbumes -->
+    </div>
+
+    <!-- Vista del reproductor -->
+    <div class="player-view" *ngIf="!isSearching">
+      <!-- Visualización del track actual -->
+      <div class="current-track-display" *ngIf="currentTrack">
+        <div class="album-circle">
+          <img [src]="currentTrack.album.images[0]?.url" [alt]="currentTrack.name" />
+        </div>
+
+        <div class="track-details">
+          <h2 class="track-name">{{ currentTrack.name }}</h2>
+          <p class="artist-name">{{ currentTrack.artists[0]?.name }}</p>
+        </div>
+      </div>
+
+      <!-- Controles de reproducción -->
+      <div class="controls">
+        <button class="control-btn previous" (click)="previous()" [disabled]="!currentTrack">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+          </svg>
+        </button>
+
+        <button class="control-btn play-pause" (click)="togglePlayPause()" [disabled]="!currentTrack">
+          <svg *ngIf="!isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg *ngIf="isPlaying" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+          </svg>
+        </button>
+
+        <button class="control-btn next" (click)="next()" [disabled]="!currentTrack">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Barra de progreso -->
+      <div class="progress-container" *ngIf="currentTrack">
+        <input 
+          type="range" 
+          min="0" 
+          [max]="duration" 
+          [value]="currentTime" 
+          (input)="onSeek($event)" 
+          step="0.1"
+        />
+        <div class="time-info">
+          <span>{{ formatTime(currentTime) }}</span>
+          <span>{{ formatTime(duration) }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
